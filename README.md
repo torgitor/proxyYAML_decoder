@@ -25,23 +25,23 @@ pip3 install -r requirements.txt
 
 ### Basic Usage
 
-**Option 1: URL Mode (Online Subscription)**
+**Option 1: Interactive Mode (Recommended)**
+```bash
+python3 clash_sub_converter.py
+```
+The program will guide you through the conversion process step by step with a user-friendly interface.
+
+**Option 2: URL Mode (Online Subscription)**
 ```bash
 python3 clash_sub_converter.py --url "https://your-airport.com/subscribe?token=xxx"
 ```
 Output saved to: `subscribe_yaml_output/subscribe_<timestamp>.yaml`
 
-**Option 2: File Mode (Local File)**
+**Option 3: File Mode (Local File)**
 ```bash
 python3 clash_sub_converter.py --file /path/to/subscription.txt
 ```
 Output saved to: `test_yaml_output/local_<timestamp>.yaml`
-
-**Option 3: Interactive Mode**
-```bash
-python3 clash_sub_converter.py
-```
-The program will guide you through the conversion process step by step.
 
 ---
 
