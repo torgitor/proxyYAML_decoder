@@ -117,13 +117,19 @@ python3 clash_sub_converter.py --url "https://example.com/sub" --output ~/clash/
 
   Processing...
 
+    [1/5] Downloaded 11,948 bytes
+    [2/5] Format: base64_uri_list
+    [3/5] Decoded 8,959 characters
+    [4/5] Found 54 proxy URIs
+    [5/5] Parsed 54 nodes (ss:54)
+
   ----------------------------------------
   ✓ Conversion successful!
   ----------------------------------------
     Output  : subscribe_yaml_output/clash_config_20260110_143022.yaml
     Proxies : 54
     Failed  : 0
-    Format  : base64
+    Format  : base64_uri_list
 
   Next: Import the YAML file into Clash
 ```

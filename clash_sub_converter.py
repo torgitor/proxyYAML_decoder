@@ -193,9 +193,20 @@ class ClashSubscriptionConverter:
         Returns:
             Result dictionary
         """
+        # Helper function for progress output
+        def log(msg):
+            if self.quiet:
+                print(f"  {msg}")
+            else:
+                logger.info(msg)
+        
+        # Step 1: Show download/read size
+        log(f"  [1/5] Downloaded {len(content):,} bytes")
+        
         # Step 2: Detect format
         format_type = self.decoder.detect_format(content)
         self.stats['format_type'] = format_type.value
+        log(f"  [2/5] Format: {format_type.value}")
         
         if format_type == FormatType.UNKNOWN:
             raise ValueError("Unable to detect subscription format")
@@ -203,11 +214,13 @@ class ClashSubscriptionConverter:
         # Step 3: Decode content
         decoded = self.decoder.decode(content, format_type)
         self.stats['decoded_size'] = len(decoded)
+        log(f"  [3/5] Decoded {len(decoded):,} characters")
         
         # Step 4: Extract URIs (if not YAML)
         if format_type != FormatType.CLASH_YAML:
             uris = self.decoder.extract_uris(decoded)
             self.stats['uri_count'] = len(uris)
+            log(f"  [4/5] Found {len(uris)} proxy URIs")
             
             if not uris:
                 raise ValueError("No valid proxy URIs found in subscription")
@@ -216,6 +229,14 @@ class ClashSubscriptionConverter:
             nodes = self.parser.parse_batch(uris)
             self.stats['parsed_count'] = len(nodes)
             self.stats['failed_count'] = len(uris) - len(nodes)
+            
+            # Count by protocol
+            protocol_counts = {}
+            for node in nodes:
+                p = node.type if hasattr(node, 'type') else node.get('type', 'unknown')
+                protocol_counts[p] = protocol_counts.get(p, 0) + 1
+            protocol_str = ', '.join([f"{k}:{v}" for k, v in protocol_counts.items()])
+            log(f"  [5/5] Parsed {len(nodes)} nodes ({protocol_str})")
             
             if not nodes:
                 raise ValueError("Failed to parse any proxy nodes")
