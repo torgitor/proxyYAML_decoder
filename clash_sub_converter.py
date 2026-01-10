@@ -16,6 +16,47 @@ Usage:
 
 import os
 import sys
+
+# ============================================================
+# Environment Checks | 环境检查
+# ============================================================
+
+# Python version check (requires 3.6+)
+if sys.version_info < (3, 6):
+    print("Error: Python 3.6 or higher is required.")
+    print("错误：需要 Python 3.6 或更高版本。")
+    print(f"Current version: {sys.version}")
+    sys.exit(1)
+
+# Dependency check
+_missing_deps = []
+try:
+    import requests
+except ImportError:
+    _missing_deps.append('requests')
+
+try:
+    import yaml
+except ImportError:
+    _missing_deps.append('pyyaml')
+
+if _missing_deps:
+    print("Error: Missing required dependencies.")
+    print("错误：缺少必需的依赖包。")
+    print(f"")
+    print(f"Missing | 缺少: {', '.join(_missing_deps)}")
+    print(f"")
+    print(f"Install with | 安装命令:")
+    print(f"  pip3 install {' '.join(_missing_deps)}")
+    print(f"")
+    print(f"Or install all | 或安装全部:")
+    print(f"  pip3 install -r requirements.txt")
+    sys.exit(1)
+
+# ============================================================
+# Imports | 导入
+# ============================================================
+
 import argparse
 import logging
 from datetime import datetime

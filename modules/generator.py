@@ -220,7 +220,14 @@ class ClashConfigGenerator:
         Returns:
             Number of bytes written
         """
+        import os
         yaml_content = self.to_yaml(config)
+        
+        # Auto-create output directory if it doesn't exist
+        output_dir = os.path.dirname(filepath)
+        if output_dir and not os.path.exists(output_dir):
+            os.makedirs(output_dir, exist_ok=True)
+            logger.info(f"Created output directory: {output_dir}")
         
         with open(filepath, 'w', encoding='utf-8') as f:
             bytes_written = f.write(yaml_content)
