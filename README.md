@@ -85,32 +85,47 @@ python3 clash_sub_converter.py --url "https://example.com/sub" --output ~/clash/
 ## 📊 Output Example
 
 ```
-╔══════════════════════════════════════════════════════════════╗
-║        🚀 Clash Subscription Converter v1.1.0                ║
-║            Interactive Console Mode                          ║
-╚══════════════════════════════════════════════════════════════╝
+  🚀 Clash Subscription Converter v1.1.0
+  ----------------------------------------
 
-📥 [Step 1/5] Downloading subscription...
-   ✓ Download complete (11.4 KB)
+  Supported inputs:
+    • Subscription URL
+    • Local file (base64/URI list)
 
-🔍 [Step 2/5] Detecting format...
-   ✓ Format detected: base64
+  Tip: Press Ctrl+C to exit anytime
 
-🔓 [Step 3/5] Decoding content...
-   ✓ Base64 decode successful
-   ✓ Found 54 URIs
+  Select input source:
+    [1] URL  - Download from internet
+    [2] File - Load from local path
 
-📦 [Step 4/5] Parsing proxy nodes...
-   ✓ Parsed 54 nodes (0 failed)
-   Protocol breakdown:
-     - SS: 50 nodes
-     - VMess: 4 nodes
+  > Choice (1/2): 1
 
-💾 [Step 5/5] Generating configuration...
-   ✓ Created proxy groups
-   ✓ Added routing rules
-   ✓ YAML validation passed
-   ✓ Saved to: subscribe_yaml_output/subscribe_20260111_143022.yaml
+  [URL Mode]
+  > Enter URL: https://example.com/subscribe?token=xxx
+
+  Output: subscribe_yaml_output/clash_config_20260110_143022.yaml
+  > Custom path (Enter=default): 
+
+  ----------------------------------------
+  Summary:
+    Type   : URL
+    Source : https://example.com/subscribe?token=xxx
+    Output : subscribe_yaml_output/clash_config_20260110_143022.yaml
+  ----------------------------------------
+
+  > Start conversion? (y/n): y
+
+  Processing...
+
+  ----------------------------------------
+  ✓ Conversion successful!
+  ----------------------------------------
+    Output  : subscribe_yaml_output/clash_config_20260110_143022.yaml
+    Proxies : 54
+    Failed  : 0
+    Format  : base64
+
+  Next: Import the YAML file into Clash
 ```
 
 ---

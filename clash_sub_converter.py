@@ -310,56 +310,54 @@ class ClashSubscriptionConverter:
 
 def interactive_mode():
     """Run in interactive mode, prompting user for input."""
-    print("\n" + "=" * 60)
-    print("🚀 Clash Subscription Converter v{} - Console Mode".format(__version__))
-    print("=" * 60)
-    print("\n📌 Supported input types:")
-    print("   • Subscription URL (https://...)")
-    print("   • Local file path (/path/to/file)")
-    print("\n💡 Tips:")
-    print("   • Press Ctrl+C to exit at any time")
-    print("   • Leave output path empty to use default with timestamp")
-    print("=" * 60)
+    print()
+    print("  🚀 Clash Subscription Converter v{}".format(__version__))
+    print("  " + "-" * 40)
+    print()
+    print("  Supported inputs:")
+    print("    • Subscription URL")
+    print("    • Local file (base64/URI list)")
+    print()
+    print("  Tip: Press Ctrl+C to exit anytime")
+    print()
     
     # Get subscription source
-    print("\n📥 Choose input source:")
-    print("   [1] Subscription URL (download from internet)")
-    print("   [2] Local file (base64 or URI list)")
+    print("  Select input source:")
+    print("    [1] URL  - Download from internet")
+    print("    [2] File - Load from local path")
     
     while True:
-        choice = input("\n👉 Enter choice (1 or 2): ").strip()
+        choice = input("\n  > Choice (1/2): ").strip()
         if choice in ['1', '2']:
             break
-        print("❌ Invalid choice. Please enter 1 or 2.")
+        print("  ! Invalid choice, enter 1 or 2")
     
     if choice == '1':
-        print("\n" + "-" * 40)
-        print("📡 URL Mode Selected")
-        print("-" * 40)
-        url = input("🔗 Enter subscription URL: ").strip()
+        print()
+        print("  [URL Mode]")
+        url = input("  > Enter URL: ").strip()
         if not url:
-            print("❌ Error: URL cannot be empty")
+            print("  ✗ URL cannot be empty")
             sys.exit(1)
         if not url.startswith(('http://', 'https://')):
-            print("⚠️  Warning: URL should start with http:// or https://")
-            confirm = input("   Continue anyway? (y/n): ").strip().lower()
+            print("  ! Warning: URL should start with http:// or https://")
+            confirm = input("  > Continue anyway? (y/n): ").strip().lower()
             if confirm != 'y':
-                print("❌ Operation cancelled")
+                print("  ✗ Cancelled")
                 sys.exit(1)
         source_type = 'url'
         source = url
         default_dir = SUBSCRIBE_OUTPUT_DIR
         default_filename = generate_timestamped_filename('clash_config')
     else:
-        print("\n" + "-" * 40)
-        print("📁 File Mode Selected")
-        print("-" * 40)
-        filepath = input("📂 Enter file path: ").strip()
+        print()
+        print("  [File Mode]")
+        filepath = input("  > Enter path: ").strip()
         if not filepath:
-            print("❌ Error: File path cannot be empty")
+            print("  ✗ Path cannot be empty")
             sys.exit(1)
         if not os.path.exists(filepath):
-            print(f"❌ Error: File not found: {filepath}")
+            print(f"  ✗ File not found: {filepath}")
             sys.exit(1)
         source_type = 'file'
         source = filepath
@@ -368,34 +366,33 @@ def interactive_mode():
     
     # Get output path with timestamp
     default_output = str(default_dir / default_filename)
-    print(f"\n📤 Output Configuration:")
-    print(f"   Default path: {default_output}")
-    output = input("   Enter custom path (or press Enter for default): ").strip()
+    print()
+    print(f"  Output: {default_output}")
+    output = input("  > Custom path (Enter=default): ").strip()
     if not output:
         output = default_output
     
     # Confirm before proceeding
-    print("\n" + "=" * 60)
-    print("📋 Conversion Summary (Before)")
-    print("=" * 60)
-    print(f"   Source type : {source_type.upper()}")
+    print()
+    print("  " + "-" * 40)
+    print("  Summary:")
+    print(f"    Type   : {source_type.upper()}")
     if source_type == 'url':
-        # Mask URL for security (show first 50 chars)
-        display_source = source[:50] + "..." if len(source) > 50 else source
+        display_source = source[:45] + "..." if len(source) > 45 else source
     else:
         display_source = source
-    print(f"   Source      : {display_source}")
-    print(f"   Output      : {output}")
-    print("=" * 60)
+    print(f"    Source : {display_source}")
+    print(f"    Output : {output}")
+    print("  " + "-" * 40)
     
-    confirm = input("\n🚀 Start conversion? (y/n): ").strip().lower()
+    confirm = input("\n  > Start conversion? (y/n): ").strip().lower()
     if confirm != 'y':
-        print("❌ Operation cancelled by user")
+        print("  ✗ Cancelled")
         sys.exit(0)
     
-    print("\n" + "=" * 60)
-    print("⏳ Starting conversion process...")
-    print("=" * 60)
+    print()
+    print("  Processing...")
+    print()
     
     # Create converter and run
     converter = ClashSubscriptionConverter()
@@ -406,29 +403,26 @@ def interactive_mode():
         result = converter.convert_from_file(source, output)
     
     # Final summary
-    print("\n" + "=" * 60)
+    print()
+    print("  " + "-" * 40)
     if result['success']:
-        print("✅ CONVERSION COMPLETED SUCCESSFULLY!")
-        print("=" * 60)
-        print(f"   📁 Output file: {result['output_path']}")
-        print(f"   📊 Total proxies: {result['stats']['parsed_count']}")
-        print(f"   ❌ Failed to parse: {result['stats']['failed_count']}")
-        print(f"   📦 Format detected: {result['stats']['format_type']}")
-        print("=" * 60)
-        print("\n💡 Next steps:")
-        print("   1. Open Clash for Windows")
-        print("   2. Go to Profiles")
-        print("   3. Import the generated YAML file")
-        print(f"   4. File location: {result['output_path']}")
+        print("  ✓ Conversion successful!")
+        print("  " + "-" * 40)
+        print(f"    Output  : {result['output_path']}")
+        print(f"    Proxies : {result['stats']['parsed_count']}")
+        print(f"    Failed  : {result['stats']['failed_count']}")
+        print(f"    Format  : {result['stats']['format_type']}")
+        print()
+        print("  Next: Import the YAML file into Clash")
     else:
-        print("❌ CONVERSION FAILED!")
-        print("=" * 60)
-        print(f"   Error: {result.get('error', 'Unknown error')}")
-        print("=" * 60)
-        print("\n💡 Troubleshooting:")
-        print("   • Check if the URL is accessible")
-        print("   • Verify the subscription is valid")
-        print("   • Try with --debug flag for more details")
+        print("  ✗ Conversion failed")
+        print("  " + "-" * 40)
+        print(f"    Error: {result.get('error', 'Unknown error')}")
+        print()
+        print("  Tips:")
+        print("    • Check URL accessibility")
+        print("    • Verify subscription validity")
+        print("    • Try --debug for details")
     
     print()
     return result
