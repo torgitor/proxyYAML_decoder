@@ -1,0 +1,73 @@
+# Clash Configuration Template
+# This template is used by clash_sub_converter.py to generate configurations
+# Modify this file to customize the generated output
+
+# Basic settings
+port: 7890                # HTTP proxy port
+socks-port: 7891          # SOCKS5 proxy port
+allow-lan: true           # Allow LAN connections (required for sharing)
+mode: rule                # Proxy mode: rule/global/direct
+log-level: info           # Log level: silent/error/warning/info/debug
+ipv6: false               # Disable IPv6 (recommended for stability)
+
+# External controller for dashboard
+external-controller: 127.0.0.1:9090
+secret: ""                # API secret (optional)
+
+# DNS Configuration (optional but recommended)
+# dns:
+#   enable: true
+#   listen: 0.0.0.0:53
+#   enhanced-mode: fake-ip
+#   fake-ip-range: 198.18.0.1/16
+#   nameserver:
+#     - 223.5.5.5         # Aliyun DNS
+#     - 119.29.29.29      # DNSPod
+#   fallback:
+#     - 8.8.8.8           # Google DNS
+#     - 1.1.1.1           # Cloudflare DNS
+
+# Proxy groups template
+# The converter will automatically populate the proxies list
+# proxy-groups:
+#   - name: Proxy
+#     type: select
+#     proxies:
+#       - Auto
+#       # [PROXIES_PLACEHOLDER]
+#
+#   - name: Auto
+#     type: url-test
+#     proxies:
+#       # [PROXIES_PLACEHOLDER]
+#     url: http://www.gstatic.com/generate_204
+#     interval: 300
+
+# Rules template
+# rules:
+#   # AI Services
+#   - DOMAIN-SUFFIX,openai.com,Proxy
+#   - DOMAIN-SUFFIX,claude.ai,Proxy
+#   - DOMAIN-SUFFIX,anthropic.com,Proxy
+#   
+#   # Streaming
+#   - DOMAIN-SUFFIX,youtube.com,Proxy
+#   - DOMAIN-SUFFIX,netflix.com,Proxy
+#   - DOMAIN-SUFFIX,spotify.com,Proxy
+#   
+#   # Social Media
+#   - DOMAIN-SUFFIX,twitter.com,Proxy
+#   - DOMAIN-SUFFIX,facebook.com,Proxy
+#   - DOMAIN-SUFFIX,instagram.com,Proxy
+#   - DOMAIN-SUFFIX,telegram.org,Proxy
+#   
+#   # Development
+#   - DOMAIN-SUFFIX,github.com,Proxy
+#   - DOMAIN-SUFFIX,githubusercontent.com,Proxy
+#   - DOMAIN-SUFFIX,docker.io,Proxy
+#   
+#   # Direct connections
+#   - GEOIP,CN,DIRECT
+#   
+#   # Default rule
+#   - MATCH,Proxy

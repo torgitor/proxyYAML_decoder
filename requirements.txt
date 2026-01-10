@@ -1,0 +1,17 @@
+# Python dependencies for Clash Subscription Converter
+# Install with: pip3 install -r requirements.txt
+
+# HTTP requests
+requests>=2.28.0
+
+# YAML processing
+pyyaml>=6.0
+
+# CLI framework (optional, for enhanced CLI)
+# click>=8.1.0
+
+# Terminal beautification (optional, for colored output)
+# rich>=13.0.0
+
+# URL/IP validation (optional)
+# validators>=0.22.0

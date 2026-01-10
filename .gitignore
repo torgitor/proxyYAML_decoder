@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Output files - DO NOT upload generated subscription configs
+subscribe_yaml_output/*.yaml
+test_yaml_output/*.yaml
+
+# Keep directory structure but ignore content
+!subscribe_yaml_output/.gitkeep
+!test_yaml_output/.gitkeep
+
+# Logs
+*.log
+
+# Backup files
+*_old.*
+README_old.md
+
+# OS
+.DS_Store
+Thumbs.db

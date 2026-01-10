@@ -1,0 +1,7 @@
+# Sample plain URI list for testing
+# Each line is a proxy URI
+
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNToxYWUwMzYyNi1jMTRhLTQ1NWQtYWYzNy1mYmVkNWQ4NmM1YmM@sd.youtu2.top:34102#youtunice.com%20test
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNToxYWUwMzYyNi1jMTRhLTQ1NWQtYWYzNy1mYmVkNWQ4NmM1YmM@zx.youtu2.top:30001#%E4%B8%93%E7%BA%BF2.5x-%E9%A6%99%E6%B8%AF1
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNToxYWUwMzYyNi1jMTRhLTQ1NWQtYWYzNy1mYmVkNWQ4NmM1YmM@zx.youtu2.top:30002#%E4%B8%93%E7%BA%BF2.5x-%E9%A6%99%E6%B8%AF2
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNToxYWUwMzYyNi1jMTRhLTQ1NWQtYWYzNy1mYmVkNWQ4NmM1YmM@sd.youtu2.top:34011#%E6%96%B0%E5%8A%A0%E5%9D%A11
