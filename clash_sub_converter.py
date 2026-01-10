@@ -74,7 +74,8 @@ class ClashSubscriptionConverter:
         port: int = 7890,
         socks_port: int = 7891,
         allow_lan: bool = True,
-        timeout: int = 30
+        timeout: int = 30,
+        quiet: bool = False
     ):
         """
         Initialize the converter.
@@ -84,7 +85,11 @@ class ClashSubscriptionConverter:
             socks_port: SOCKS5 proxy port (default: 7891)
             allow_lan: Allow LAN connections (default: True)
             timeout: Download timeout in seconds (default: 30)
+            quiet: Suppress logging output (default: False)
         """
+        self.quiet = quiet
+        if quiet:
+            logging.getLogger().setLevel(logging.WARNING)
         self.downloader = SubscriptionDownloader(timeout=timeout)
         self.decoder = FormatDecoder()
         self.parser = URIParser()
@@ -116,16 +121,15 @@ class ClashSubscriptionConverter:
         Returns:
             Result dictionary with status and statistics
         """
-        logger.info("=" * 50)
-        logger.info("🚀 Clash Subscription Converter v%s", __version__)
-        logger.info("=" * 50)
+        if not self.quiet:
+            logger.info("Downloading subscription...")
         
         try:
             # Step 1: Download subscription
-            logger.info("\n📥 Step 1: Downloading subscription...")
             content = self.downloader.download(url)
             self.stats['download_size'] = len(content)
-            logger.info(f"   Downloaded: {len(content):,} bytes")
+            if not self.quiet:
+                logger.info(f"Downloaded: {len(content):,} bytes")
             
             # Continue with common processing
             return self._process_content(content, output_path)
@@ -149,17 +153,16 @@ class ClashSubscriptionConverter:
         Returns:
             Result dictionary with status and statistics
         """
-        logger.info("=" * 50)
-        logger.info("🚀 Clash Subscription Converter v%s", __version__)
-        logger.info("=" * 50)
+        if not self.quiet:
+            logger.info("Reading local file...")
         
         try:
             # Step 1: Read file
-            logger.info("\n📁 Step 1: Reading local file...")
             with open(input_path, 'rb') as f:
                 content = f.read()
             self.stats['download_size'] = len(content)
-            logger.info(f"   Read: {len(content):,} bytes")
+            if not self.quiet:
+                logger.info(f"Read: {len(content):,} bytes")
             
             # Continue with common processing
             return self._process_content(content, output_path)
@@ -191,42 +194,33 @@ class ClashSubscriptionConverter:
             Result dictionary
         """
         # Step 2: Detect format
-        logger.info("\n🔍 Step 2: Detecting format...")
         format_type = self.decoder.detect_format(content)
         self.stats['format_type'] = format_type.value
-        logger.info(f"   Detected: {format_type.value}")
         
         if format_type == FormatType.UNKNOWN:
             raise ValueError("Unable to detect subscription format")
         
         # Step 3: Decode content
-        logger.info("\n🔓 Step 3: Decoding content...")
         decoded = self.decoder.decode(content, format_type)
         self.stats['decoded_size'] = len(decoded)
-        logger.info(f"   Decoded: {len(decoded):,} characters")
         
         # Step 4: Extract URIs (if not YAML)
         if format_type != FormatType.CLASH_YAML:
-            logger.info("\n📦 Step 4: Extracting URIs...")
             uris = self.decoder.extract_uris(decoded)
             self.stats['uri_count'] = len(uris)
-            logger.info(f"   Found: {len(uris)} URIs")
             
             if not uris:
                 raise ValueError("No valid proxy URIs found in subscription")
             
             # Step 5: Parse URIs
-            logger.info("\n🔧 Step 5: Parsing proxy nodes...")
             nodes = self.parser.parse_batch(uris)
             self.stats['parsed_count'] = len(nodes)
             self.stats['failed_count'] = len(uris) - len(nodes)
-            logger.info(f"   Parsed: {len(nodes)} nodes (failed: {self.stats['failed_count']})")
             
             if not nodes:
                 raise ValueError("Failed to parse any proxy nodes")
             
             # Step 6: Generate config
-            logger.info("\n⚙️ Step 6: Generating Clash config...")
             config = self.generator.generate(nodes)
             
         else:
@@ -234,30 +228,19 @@ class ClashSubscriptionConverter:
             import yaml
             config = yaml.safe_load(decoded)
             self.stats['parsed_count'] = len(config.get('proxies', []))
-            logger.info(f"   Found: {self.stats['parsed_count']} proxies in YAML")
         
         # Step 7: Validate config
-        logger.info("\n✅ Step 7: Validating configuration...")
         result = self.validator.validate(config)
         
         if result.errors:
-            for error in result.errors:
-                logger.error(f"   ❌ {error}")
             raise ValueError(f"Validation failed: {result.errors[0]}")
         
-        if result.warnings:
-            for warning in result.warnings:
-                logger.warning(f"   ⚠️ {warning}")
-        
-        logger.info("   ✓ Configuration is valid")
-        
         # Step 8: Save file
-        logger.info("\n💾 Step 8: Saving configuration...")
         bytes_written = self.generator.save(config, output_path)
-        logger.info(f"   Saved to: {output_path} ({bytes_written:,} bytes)")
         
-        # Print summary
-        self._print_summary(config, output_path)
+        # Print summary (only in non-quiet mode)
+        if not self.quiet:
+            self._print_summary(config, output_path)
         
         return {
             'success': True,
@@ -267,45 +250,11 @@ class ClashSubscriptionConverter:
         }
     
     def _print_summary(self, config: Dict[str, Any], output_path: str):
-        """Print conversion summary."""
-        logger.info("\n" + "=" * 50)
-        logger.info("📊 Conversion Summary")
-        logger.info("=" * 50)
-        logger.info(f"   Total proxies: {len(config['proxies'])}")
-        logger.info(f"   Proxy groups: {len(config['proxy-groups'])}")
-        logger.info(f"   Rules: {len(config['rules'])}")
-        
-        # Count by type
-        type_counts = {}
-        for proxy in config['proxies']:
-            t = proxy.get('type', 'unknown')
-            type_counts[t] = type_counts.get(t, 0) + 1
-        
-        logger.info("   By type:")
-        for t, count in type_counts.items():
-            logger.info(f"      - {t}: {count}")
-        
-        # Count by region
-        region_keywords = {
-            '香港': 0, '日本': 0, '新加坡': 0, '台湾': 0, 
-            '美国': 0, '韩国': 0, '英国': 0, '澳洲': 0
-        }
-        for proxy in config['proxies']:
-            name = proxy.get('name', '').lower()
-            for region in region_keywords:
-                if region.lower() in name:
-                    region_keywords[region] += 1
-                    break
-        
-        nonzero_regions = {k: v for k, v in region_keywords.items() if v > 0}
-        if nonzero_regions:
-            logger.info("   By region:")
-            for region, count in nonzero_regions.items():
-                logger.info(f"      - {region}: {count}")
-        
-        logger.info("\n✨ Conversion completed successfully!")
-        logger.info(f"   Output: {output_path}")
-        logger.info("   You can now import this file into Clash")
+        """Print conversion summary (for CLI mode only)."""
+        print()
+        print(f"  Conversion complete!")
+        print(f"  Proxies: {len(config['proxies'])}")
+        print(f"  Output: {output_path}")
 
 
 def interactive_mode():
@@ -394,8 +343,8 @@ def interactive_mode():
     print("  Processing...")
     print()
     
-    # Create converter and run
-    converter = ClashSubscriptionConverter()
+    # Create converter with quiet mode (suppress logging in interactive mode)
+    converter = ClashSubscriptionConverter(quiet=True)
     
     if source_type == 'url':
         result = converter.convert_from_url(source, output)
