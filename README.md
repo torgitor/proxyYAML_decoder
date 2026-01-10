@@ -1,12 +1,16 @@
-# Clash Subscription Converter
+# Clash Subscription Converter | Clash 订阅转换工具
 
 > Automated tool to convert proxy subscription links into Clash-compatible YAML configuration files.
+> 
+> 自动将代理订阅链接转换为 Clash 兼容的 YAML 配置文件。
 
-## 📋 Overview
+## 📋 Overview | 概述
 
 This tool automates the conversion of proxy subscription URLs into Clash configuration files. Instead of manually downloading, decoding base64, parsing URIs, and building YAML configs, simply provide a subscription link and get a ready-to-use Clash configuration.
 
-**Supported Protocols:**
+本工具自动化处理代理订阅 URL 到 Clash 配置文件的转换。无需手动下载、base64 解码、URI 解析和构建 YAML 配置，只需提供订阅链接即可获得可用的 Clash 配置。
+
+**Supported Protocols | 支持的协议：**
 - Shadowsocks (SS)
 - VMess
 - Trojan
@@ -14,75 +18,77 @@ This tool automates the conversion of proxy subscription URLs into Clash configu
 
 ---
 
-## ⚡ Quick Start
+## ⚡ Quick Start | 快速开始
 
-### Installation
+### Installation | 安装
 
 ```bash
 cd /home/jetson/2025_FYP/proxyYAML_decoder
 pip3 install -r requirements.txt
 ```
 
-### Basic Usage
+### Basic Usage | 基本使用
 
-**Option 1: Interactive Mode (Recommended)**
+**Option 1: Interactive Mode (Recommended) | 交互模式（推荐）**
 ```bash
 python3 clash_sub_converter.py
 ```
 The program will guide you through the conversion process step by step with a user-friendly interface.
 
-**Option 2: URL Mode (Online Subscription)**
+程序将通过友好的界面逐步引导您完成转换过程。
+
+**Option 2: URL Mode (Online Subscription) | URL 模式（在线订阅）**
 ```bash
 python3 clash_sub_converter.py --url "https://your-airport.com/subscribe?token=xxx"
 ```
-Output saved to: `subscribe_yaml_output/subscribe_<timestamp>.yaml`
+Output saved to | 输出保存到: `subscribe_yaml_output/subscribe_<timestamp>.yaml`
 
-**Option 3: File Mode (Local File)**
+**Option 3: File Mode (Local File) | 文件模式（本地文件）**
 ```bash
 python3 clash_sub_converter.py --file /path/to/subscription.txt
 ```
-Output saved to: `test_yaml_output/local_<timestamp>.yaml`
+Output saved to | 输出保存到: `test_yaml_output/local_<timestamp>.yaml`
 
 ---
 
-## 📁 Output Files
+## 📁 Output Files | 输出文件
 
-| Mode | Output Directory | Filename Format |
+| Mode 模式 | Output Directory 输出目录 | Filename Format 文件名格式 |
 |------|------------------|-----------------|
 | `--url` | `subscribe_yaml_output/` | `subscribe_YYYYMMDD_HHMMSS.yaml` |
 | `--file` | `test_yaml_output/` | `local_YYYYMMDD_HHMMSS.yaml` |
-| Interactive | Based on input type | Same as above |
+| Interactive 交互式 | Based on input type 根据输入类型 | Same as above 同上 |
 
 ---
 
-## 🎯 Command Options
+## 🎯 Command Options | 命令选项
 
 ```bash
 python3 clash_sub_converter.py [OPTIONS]
 
-Options:
-  --url TEXT      Subscription URL to convert
-  --file TEXT     Local file path to convert
-  --output TEXT   Custom output file path (optional)
-  --help          Show help message
+Options | 选项:
+  --url TEXT      Subscription URL to convert | 要转换的订阅 URL
+  --file TEXT     Local file path to convert | 要转换的本地文件路径
+  --output TEXT   Custom output file path (optional) | 自定义输出路径（可选）
+  --help          Show help message | 显示帮助信息
 ```
 
-### Examples
+### Examples | 示例
 
 ```bash
-# Convert online subscription
+# Convert online subscription | 转换在线订阅
 python3 clash_sub_converter.py --url "https://example.com/sub?token=abc123"
 
-# Convert local base64 file
+# Convert local base64 file | 转换本地 base64 文件
 python3 clash_sub_converter.py --file ~/Downloads/sub.txt
 
-# Specify custom output path
+# Specify custom output path | 指定自定义输出路径
 python3 clash_sub_converter.py --url "https://example.com/sub" --output ~/clash/config.yaml
 ```
 
 ---
 
-## 📊 Output Example
+## 📊 Output Example | 输出示例
 
 ```
   🚀 Clash Subscription Converter v1.1.0
@@ -136,46 +142,49 @@ python3 clash_sub_converter.py --url "https://example.com/sub" --output ~/clash/
 
 ---
 
-## 🔧 Troubleshooting
+## 🔧 Troubleshooting | 故障排除
 
-| Issue | Solution |
+| Issue 问题 | Solution 解决方案 |
 |-------|----------|
-| Download timeout | Use proxy: `export http_proxy=http://127.0.0.1:7890` |
-| Invalid base64 | Check if file is already plain text or YAML format |
-| Parse errors | Enable debug mode to see details |
-| Clash won't load | Verify YAML syntax with `python3 -c "import yaml; yaml.safe_load(open('config.yaml'))"` |
+| Download timeout 下载超时 | Use proxy 使用代理: `export http_proxy=http://127.0.0.1:7890` |
+| Invalid base64 无效的 base64 | Check if file is already plain text or YAML 检查文件是否已是纯文本或 YAML |
+| Parse errors 解析错误 | Enable debug mode to see details 启用调试模式查看详情 |
+| Clash won't load Clash 无法加载 | Verify YAML syntax 验证 YAML 语法: `python3 -c "import yaml; yaml.safe_load(open('config.yaml'))"` |
 
 ---
 
-## 📄 Project Structure
+## 📄 Project Structure | 项目结构
 
 ```
 proxyYAML_decoder/
-├── clash_sub_converter.py   # Main CLI program
-├── config_template.yaml     # Configuration template
-├── requirements.txt         # Python dependencies
-├── modules/                 # Core modules
-│   ├── downloader.py        # HTTP download
-│   ├── decoder.py           # Format detection & decoding
-│   ├── parser.py            # URI parsing (SS/VMess/Trojan/VLESS)
-│   ├── generator.py         # YAML generation
-│   └── validator.py         # Config validation
-├── tests/                   # Test suite
-├── subscribe_yaml_output/   # URL subscription outputs
-└── test_yaml_output/        # Local file test outputs
+├── clash_sub_converter.py   # Main CLI program | 主程序
+├── config_template.yaml     # Configuration template | 配置模板
+├── requirements.txt         # Python dependencies | Python 依赖
+├── modules/                 # Core modules | 核心模块
+│   ├── downloader.py        # HTTP download | HTTP 下载
+│   ├── decoder.py           # Format detection & decoding | 格式检测与解码
+│   ├── parser.py            # URI parsing (SS/VMess/Trojan/VLESS) | URI 解析
+│   ├── generator.py         # YAML generation | YAML 生成
+│   └── validator.py         # Config validation | 配置验证
+├── tests/                   # Test suite | 测试套件
+├── subscribe_yaml_output/   # URL subscription outputs | URL 订阅输出
+└── test_yaml_output/        # Local file test outputs | 本地文件测试输出
 ```
 
 ---
 
-## 📚 More Information
+## 📚 More Information | 更多信息
 
 For detailed technical documentation, architecture design, and contribution guidelines, see:
-- **[DEVELOPMENT.md](./DEVELOPMENT.md)** - Developer documentation
+
+详细的技术文档、架构设计和贡献指南，请参阅：
+
+- **[DEVELOPMENT.md](./DEVELOPMENT.md)** - Developer documentation | 开发者文档
 
 ---
 
-## 📄 License
+## 📄 License | 许可证
 
 MIT License
 
-**Last Updated**: 2026-01-11 | **Version**: 1.1.0
+**Last Updated | 最后更新**: 2026-01-10 | **Version | 版本**: 1.1.0
