@@ -32,3 +32,8 @@ README_old.md
 # OS
 .DS_Store
 Thumbs.db
+
+# PyInstaller
+build
+dist
+clash_sub_converter.spec
