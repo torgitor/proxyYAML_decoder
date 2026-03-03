@@ -187,19 +187,47 @@ class URIParser:
             uuid = config.get('id', '')
             alter_id = int(config.get('aid', 0))
             
+            extra = {
+                'uuid': uuid,
+                'alterId': alter_id,
+                'cipher': config.get('scy', 'auto'),
+                'network': config.get('net', 'tcp'),
+                'tls': config.get('tls', '') == 'tls',
+                'udp': True
+            }
+
+            # add network type specific options
+            network = extra['network']
+            if network == 'ws':
+                extra['ws-opts'] = {
+                    'path': config.get('path', '')
+                }
+            elif network == 'grpc':
+                extra['grpc-opts'] = {
+                    'grpc-service-name': config.get('path', '')
+                }
+
+            # add sni option
+            sni = config.get('sni', '')
+            if sni:
+                extra['servername'] = sni
+                if 'ws-opts' in extra:
+                    extra['ws-opts']['headers'] = {
+                        'Host': sni
+                    }
+
+            # add allowInsecure option
+            allow_insecure = config.get('allowInsecure', False)
+            if allow_insecure:
+                extra['skip-cert-verify'] = bool(allow_insecure)
+                extra['allow-insecure'] = bool(allow_insecure)
+
             return ProxyNode(
                 name=name,
                 type='vmess',
                 server=server,
                 port=port,
-                extra={
-                    'uuid': uuid,
-                    'alterId': alter_id,
-                    'cipher': config.get('scy', 'auto'),
-                    'network': config.get('net', 'tcp'),
-                    'tls': config.get('tls', '') == 'tls',
-                    'udp': True
-                }
+                extra=extra
             )
             
         except Exception as e:
